@@ -75,7 +75,7 @@ In our example above,
 
 because (2) is happening, then this means that the number of comparisons for a string that has been broken down into `n` tokens is going to be
 
-<BlockMath math="1 + 2 + \dots + n = \frac{n(n+1)}{2}" />
+<Latex formula="1 + 2 + \dots + n = \frac{n(n+1)}{2}" />
 
 which is quadratic in nature. This is an oversimplification of attention but you get the idea. That's why it gets more and more costly as we expand our models context sizes because there are simply more comparisons to be made.
 
@@ -102,7 +102,7 @@ However, as a result of a world state, the RWKV model has a major weakness - it 
 
 As a result, when we're prompting the RWKV model, we want to use the following syntax
 
-```a
+```
 {{INSTRUCTION}}
 
 {{CONTEXT}}
@@ -112,7 +112,7 @@ As a result, when we're prompting the RWKV model, we want to use the following s
 
 instead of the typical format of
 
-```a
+```
 {{CONTEXT}}
 
 {{INSTRUCTION}}
@@ -225,23 +225,23 @@ In our function, We have the parameters of
 
 - `last_x,last_num, last_den` : These are all stored in a huge `(N_Layers, 4,N_embeddings)` array and simply store the previous computations for each layer.
 
-  - `last_x`: <InlineMath math="x_{t-1}" />
-  - `last_num`:<InlineMath math="wkv_{t-1}" /> numerator
-  - `last_den`:<InlineMath math="wkv_{t-1}" /> denominator
+  - `last_x`: <Latex math = "x_{t-1}" />
+  - `last_num`:<Latex math = "wkv_{t-1}" /> numerator
+  - `last_den`:<Latex math = "wkv_{t-1}" /> denominator
 
 - `decay, bonus, mix_k, mix_v, mix_r, Wk, Wv, Wr, Wout`
-  - `decay` : `w` parameter can be treated as <InlineMath math="e^{-\text{decay}}" />
+  - `decay` : `w` parameter can be treated as <Latex math = "e^{-\text{decay}}" />
   - `bonus` : This is equivalent to the `u` parameter above
-  - `mix_k`,`mix_r` and `mix_v` are equal to <InlineMath math="\mu_k,\mu_r,\mu_t" />
+  - `mix_k`,`mix_r` and `mix_v` are equal to <Latex math = "\mu_k,\mu_r,\mu_t" />
   - `Wk,Wv,Wr and wout` are equivalent to `W_k,W_v,W_r` and `W_o` above
-- Note here that <InlineMath math="\sigma" /> simply represents the sigmoid activation function.
+- Note here that <Latex math = "\sigma" /> simply represents the sigmoid activation function.
 
 In the code above, it might be a little bit difficult to visualise the dimensions so
 
-- (1024,1024) : <InlineMath math = "W_r, W_k, W_v" />
-- (1024, ): <InlineMath math = "\mu_r,x_t,x_{t-1},\mu_k,\mu_v" /> , decay, bonus
+- (1024,1024) : <Latex formula= "W_r, W_k, W_v" />
+- (1024, ): <Latex formula= "\mu_r,x_t,x_{t-1},\mu_k,\mu_v" /> , decay, bonus
 
-This means that essentially <InlineMath math = "r_t,k_t" /> and <InlineMath math = "v_t" /> are all going to be of the dimension `(1024,)` and the final output of this function will be of `(1024,)`.
+This means that essentially <Latex formula= "r_t,k_t" /> and <Latex formula= "v_t" /> are all going to be of the dimension `(1024,)` and the final output of this function will be of `(1024,)`.
 
 > What's interesting about this is that information on all previous tokens seen
 > is stored in a 1024 dimensional array. Compare this to transformers that
@@ -263,36 +263,36 @@ den = exp(-exp(decay)) * last_den + exp(k)
 
 Which tries to implement the step of
 
-<BlockMath math="wkv_t=\frac{\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i} + e^{\mu+k_t}v_t}{\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i} + e^{\mu+k_t}}" />
+<Latex formula="wkv_t=\frac{\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i} + e^{\mu+k_t}v_t}{\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i} + e^{\mu+k_t}}" />
 
 Let's try to build the intuition for this step by step. Let's say we wanted to take the sum of all the elements in the following sum. ( This is present in the numerator ).
 
-<BlockMath math="\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i}" />
+<Latex formula="\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i}" />
 
-Let's also designate the sum of all the elements defined in the sum as <InlineMath math = "\alpha_{t-1}" /> where we are summing elements from 1 to <InlineMath math="t-1" />. How do we get from <InlineMath math ="\alpha_{t-1}" /> to <InlineMath math ="\alpha_{t}" />?
+Let's also designate the sum of all the elements defined in the sum as <Latex formula= "\alpha_{t-1}" /> where we are summing elements from 1 to <Latex math = "t-1" />. How do we get from <Latex formula="\alpha_{t-1}" /> to <Latex formula="\alpha_{t}" />?
 
-If we look at the term <InlineMath math = "\alpha_{t-1}"/>, we can see that the final value of the summation is going to be
+If we look at the term <Latex formula= "\alpha_{t-1}"/>, we can see that the final value of the summation is going to be
 
-<BlockMath math="e^{-(t-1-(t-1))w+k_i} = e^{k_{t-i}}" />
+<Latex formula="e^{-(t-1-(t-1))w+k_i} = e^{k_{t-i}}" />
 
 Well, what about the second last value of the summation then? it's going to be
 
-<BlockMath math="e^{-(t-1-(t-2))w+k_{t-2}} = e^{-w + k_{t-i}}" />
+<Latex formula="e^{-(t-1-(t-2))w+k_{t-2}} = e^{-w + k_{t-i}}" />
 
-This means that we can therefore link <InlineMath math = "\alpha_{t-1}" /> with <InlineMath math = "\alpha_{t}" /> by doing
+This means that we can therefore link <Latex formula= "\alpha_{t-1}" /> with <Latex formula= "\alpha_{t}" /> by doing
 
-<BlockMath math="\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i} = \sum_{i=1}^{t-2}e^{-(t-1-i)w+k_i}v_{i} + e^{k_{t-1}}" />
+<Latex formula="\sum_{i=1}^{t-1}e^{-(t-1-i)w+k_i}v_{i} = \sum_{i=1}^{t-2}e^{-(t-1-i)w+k_i}v_{i} + e^{k_{t-1}}" />
 
-We can perform a similar substituition to get <InlineMath math = "\beta_{t} =\beta_{t-1}+ e^{k_{t-1}}" />.
+We can perform a similar substituition to get <Latex formula= "\beta_{t} =\beta_{t-1}+ e^{k_{t-1}}" />.
 
 ```python
 num = exp(-exp(decay)) * last_num + exp(k) * v
 den = exp(-exp(decay)) * last_den + exp(k)
 ```
 
-We can then rewrite our equation for <InlineMath math = "wkv_t" /> as
+We can then rewrite our equation for <Latex formula= "wkv_t" /> as
 
-<BlockMath math="wkv_{t} = \frac{\alpha_{t-1} + e^{\text{bonus} + k_{t}}v_t }{\beta_{t-1} + e^{\text{bonus} + k_{t}}}" />
+<Latex formula="wkv_{t} = \frac{\alpha_{t-1} + e^{\text{bonus} + k_{t}}v_t }{\beta_{t-1} + e^{\text{bonus} + k_{t}}}" />
 
 which corresponds to our implementation of
 
@@ -308,7 +308,7 @@ The channel mixing is the short term component of the system - it only has acces
 
 <img src="/images/Channel_Mixing.png" />
 
-It's significantly easier to understand. **Note that all these parameters are learned parameters with the exception of the <InlineMath math="x_{t-1}" /> values**.
+It's significantly easier to understand. **Note that all these parameters are learned parameters with the exception of the <Latex math = "x_{t-1}" /> values**.
 
 Our channel mixing function is implemented as
 
@@ -321,8 +321,8 @@ def channel_mixing(x, last_x, mix_k, mix_r, Wk, Wr, Wv):
 ```
 
 - It's interesting here to note that
-  - <InlineMath math="w_k" /> has a dimensionality of <InlineMath math="[4096,1024]" />
-  - <InlineMath math="w_v" /> has a dimensionality of <InlineMath math="[1024,4096]" />
+  - <Latex math = "w_k" /> has a dimensionality of <Latex math = "[4096,1024]" />
+  - <Latex math = "w_v" /> has a dimensionality of <Latex math = "[1024,4096]" />
 
 This means that we perform a scaling in the channel_mixing step from an initial dimensionality of 1024 to a dimensionality of 4096. This is very similar to the feed forward network that is used as a transformer.
 

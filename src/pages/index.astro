@@ -29,6 +29,12 @@ const sortedPosts = sortedYears.map((year) => [
     (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
   ),
 ]);
+
+const socials = {
+  Twitter: "https://twitter.com/ivanleomk",
+  GitHub: "https://github.com/ivanleomk",
+  LinkedIn: "https://www.linkedin.com/in/ivanleo/",
+};
 ---
 
 <!doctype html>
@@ -56,7 +62,12 @@ const sortedPosts = sortedYears.map((year) => [
           <div class="flex space-x-4">
             {
               ["Twitter", "GitHub", "LinkedIn"].map((platform) => (
-                <a href="#" class="text-gray-600 hover:text-gray-900">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={socials[platform as keyof typeof socials]}
+                  class="text-gray-600 hover:text-gray-900"
+                >
                   {platform}
                 </a>
               ))

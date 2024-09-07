@@ -50,6 +50,7 @@ const ogImageUrl = `/blog/${post.slug}/og-image.png`;
   });
 </script>
 <head>
+  <meta charset="UTF-8" />
   <SEOHeader
     title={post.data.title}
     description={post.data.description}
@@ -57,7 +58,7 @@ const ogImageUrl = `/blog/${post.slug}/og-image.png`;
     ogImageUrl={ogImageUrl}
   />
 </head>
-<body class="max-w-3xl mx-auto px-4 py-8">
+<body class="">
   <BlogPost {...post.data}>
     <Content components={{ Latex }} />
   </BlogPost>

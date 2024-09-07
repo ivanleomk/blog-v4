@@ -10,10 +10,10 @@ const { title, publishedAt } = Astro.props;
 ---
 
 <html lang="en">
-  <body>
+  <body class="max-w-4xl mx-auto mx-4">
     <Header />
-    <main>
-      <article>
+    <main class="max-w-4xl mx-auto px-4">
+      <article class="w-full">
         <a
           href="/"
           class="inline-block mb-6 text-gray-600 hover:text-gray-800 transition-colors"
@@ -24,7 +24,7 @@ const { title, publishedAt } = Astro.props;
           class="prose dark:prose-invert
 		prose-h1:font-bold prose-h1:text-xl
 		prose-a:text-blue-600 prose-p:text-justify prose-img:rounded-xl
-		prose-headings:underline"
+		prose-headings:underline max-w-none"
         >
           <div class="title">
             <div class="space-y-4">

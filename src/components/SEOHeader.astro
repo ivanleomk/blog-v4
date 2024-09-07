@@ -6,13 +6,19 @@ interface Props {
   title?: string;
   description?: string;
   url?: string;
+  ogImageUrl?: string;
 }
 
 const {
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   url = Astro.url,
+  ogImageUrl,
 } = Astro.props;
+
+const fullOgImageUrl = ogImageUrl
+  ? new URL(ogImageUrl, Astro.site).toString()
+  : undefined;
 ---
 
 <html lang="en">
@@ -25,12 +31,17 @@ const {
           title: title,
           type: "website",
           image:
+            fullOgImageUrl ||
             "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
           url: url,
         },
       }}
       twitter={{
         creator: "@ivanleomk",
+        card: fullOgImageUrl ? "summary_large_image" : "summary",
+        image: fullOgImageUrl,
+        title: title,
+        description: description,
       }}
       extend={{
         // extending the default link tags
@@ -40,12 +51,8 @@ const {
           {
             name: "twitter:image",
             content:
+              fullOgImageUrl ||
               "https://pbs.twimg.com/profile_images/1817176209484402688/coeHXGDR_400x400.jpg",
-          },
-          { name: "twitter:title", content: title },
-          {
-            name: "twitter:description",
-            content: description,
           },
         ],
       }}

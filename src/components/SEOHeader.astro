@@ -1,0 +1,54 @@
+---
+import { SEO } from "astro-seo";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+
+interface Props {
+  title?: string;
+  description?: string;
+  url?: string;
+}
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  url = Astro.url,
+} = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <SEO
+      title={title}
+      description={description}
+      openGraph={{
+        basic: {
+          title: title,
+          type: "website",
+          image:
+            "https://user-images.githubusercontent.com/5182256/131216951-8f74f425-f775-463d-a11b-0e01ad9fce8d.png",
+          url: url,
+        },
+      }}
+      twitter={{
+        creator: "@ivanleomk",
+      }}
+      extend={{
+        // extending the default link tags
+        link: [{ rel: "icon", href: "/favicon.ico" }],
+        // extending the default meta tags
+        meta: [
+          {
+            name: "twitter:image",
+            content:
+              "https://pbs.twimg.com/profile_images/1817176209484402688/coeHXGDR_400x400.jpg",
+          },
+          { name: "twitter:title", content: title },
+          {
+            name: "twitter:description",
+            content: description,
+          },
+        ],
+      }}
+    />
+  </head>
+</html>

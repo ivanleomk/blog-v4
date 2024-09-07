@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import { getCollection, type CollectionEntry } from "astro:content";
+import SEOHeader from "../components/SEOHeader.astro";
 
 const posts = await getCollection("blog");
 
@@ -34,7 +35,7 @@ const sortedPosts = sortedYears.map((year) => [
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <SEOHeader />
   </head>
   <body class="max-w-6xl mx-auto px-4 py-8">
     <Header />

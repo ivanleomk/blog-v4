@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
 import Latex from "../../components/Latex.astro";
+import SEOHeader from "../../components/SEOHeader.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -47,7 +48,13 @@ const { Content } = await post.render();
     });
   });
 </script>
-
+<head>
+  <SEOHeader
+    title={post.data.title}
+    description={post.data.description}
+    url={Astro.url.toString()}
+  />
+</head>
 <body class="max-w-3xl mx-auto px-4 py-8">
   <BlogPost {...post.data}>
     <Content components={{ Latex }} />

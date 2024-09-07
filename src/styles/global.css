@@ -1,0 +1,31 @@
+pre {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #1f2937;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+pre:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background-color: #e5e7eb;
+}
+
+.copy-button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

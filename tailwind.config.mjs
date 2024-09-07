@@ -6,5 +6,8 @@ export default {
 	},
 	plugins: [
 		require('@tailwindcss/typography'),
+		function({ addVariant }) {
+			addVariant('copy-button', '&::after')
+		},
 	],
 }

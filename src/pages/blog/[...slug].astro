@@ -27,8 +27,10 @@ const { Content } = await post.render();
       block.appendChild(button);
 
       button.addEventListener("click", () => {
+        //@ts-ignore
         const code = block.querySelector("code").textContent;
         navigator.clipboard
+          //@ts-ignore
           .writeText(code)
           .then(() => {
             button.textContent = "Copied!";

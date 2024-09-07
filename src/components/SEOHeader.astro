@@ -23,15 +23,20 @@ const fullOgImageUrl = ogImageUrl
 
 <html lang="en">
   <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MM8QMY5JWN"
-    ></script>
+    <script
+      type="application/javascript"
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-MM8QMY5JWN"></script>
     <script>
+      //@ts-ignore
       window.dataLayer = window.dataLayer || [];
       function gtag() {
+        //@ts-ignore
         dataLayer.push(arguments);
       }
+      //@ts-ignore
       gtag("js", new Date());
-
+      //@ts-ignore
       gtag("config", "G-MM8QMY5JWN");
     </script>
     <SEO

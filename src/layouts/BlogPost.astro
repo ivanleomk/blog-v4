@@ -20,7 +20,13 @@ const { title, publishedAt } = Astro.props;
             <div class="text-sm text-gray-500">
               Last updated on <FormattedDate date={publishedAt} />
             </div>
-            <!-- <hr class="border-t border-gray-300 my-6" /> -->
+          </div>
+          <div class="mt-6 mb-8">
+            <img
+              src={`/og-images/${Astro.params.slug}.png`}
+              alt={`Hero image for ${title}`}
+              class="w-3/4 h-auto rounded-lg shadow-md mx-auto"
+            />
           </div>
           <div class="py-4"></div>
           <div

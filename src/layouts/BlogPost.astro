@@ -14,30 +14,18 @@ const { title, publishedAt } = Astro.props;
     <Header />
     <main class="max-w-4xl mx-auto px-4">
       <article class="w-full">
-        <a
-          href="/"
-          class="inline-block mb-6 text-gray-600 hover:text-gray-800 transition-colors"
-        >
-          &larr; Back to Articles
-        </a>
-        <div
-          class="prose dark:prose-invert
-		prose-h1:font-bold prose-h1:text-xl
-		prose-a:text-blue-600 prose-p:text-justify prose-img:rounded-xl
-		prose-headings:underline max-w-none"
-        >
-          <div class="title">
-            <div class="space-y-4">
-              <div class="text-sm text-gray-500">
-                <FormattedDate date={publishedAt} />
-              </div>
-              <h1 class="text-4xl font-bold">{title}</h1>
-              <div class="text-sm text-gray-500">
-                Last updated on <FormattedDate date={publishedAt} />
-              </div>
-              <hr class="border-t border-gray-300 my-6" />
+        <div class="title">
+          <div class="space-y-4">
+            <h1 class="text-4xl font-bold">{title}</h1>
+            <div class="text-sm text-gray-500">
+              Last updated on <FormattedDate date={publishedAt} />
             </div>
-            <div class="py-4"></div>
+            <!-- <hr class="border-t border-gray-300 my-6" /> -->
+          </div>
+          <div class="py-4"></div>
+          <div
+            class="prose prose-h1:font-bold prose-h1:text-lg prose-p:text-justify prose-img:rounded-xl prose-headings:underline max-w-none prose-xl"
+          >
             <slot />
           </div>
         </div>

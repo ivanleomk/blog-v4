@@ -286,4 +286,117 @@ async def main():
     )
 ```
 
+3. Write custom scorer functions - these are useful in helping to capture functionality that isn't available in the autoevals library. The following example shows how we can calculate MRR and Recall at different values of `k` in Braintrust. This is extremely useful when we want to parameterize our evaluation to run different metrics or different sizes of metrics.
+
+```python
+
+def calculate_mrr(predictions: list[str], gt: list[str]):
+    mrr = 0
+    for label in gt:
+        if label in predictions:
+            mrr = max(mrr, 1 / (predictions.index(label) + 1))
+    return mrr
+
+
+def get_recall(predictions: list[str], gt: list[str]):
+    return len([label for label in gt if label in predictions]) / len(gt)
+
+
+eval_metrics = [["mrr", calculate_mrr], ["recall", get_recall]]
+sizes = [3, 5, 10, 15, 25]
+
+metrics = {
+    f"{metric_name}@{size}": lambda predictions, gt, m=metric_fn, s=size: (
+        lambda p, g: m(p[:s], g)
+    )(predictions, gt)
+    for (metric_name, metric_fn), size in itertools.product(eval_metrics, sizes)
+}
+
+def evaluate_braintrust(input, output, **kwargs):
+    return [
+        Score(
+            name=metric,
+            score=score_fn(output, kwargs["expected"]),
+            metadata={"query": input, "result": output, **kwargs["metadata"]},
+        )
+        for metric, score_fn in metrics.items()
+    ]
+```
+
+We can see here that with this method, we're able to log all of our custom metrics. In Braintrust, we'll need to make sure that our scores all lie within the `Score` class so that we can capture them properly. We can then call this function using the high level `Eval` function as seen below.
+
+```python
+Eval(
+    "MS Marco",  # Replace with your project name
+    data=lambda: [
+        {
+            "input": query,
+            "expected": label,
+            "metadata": {"search_type": "fts", "k": "25"},
+        }
+        for query, label in zip(queries, labels)
+    ],  # Replace with your eval dataset
+    task=lambda query: [
+        row["chunk"]
+        for row in table.search(query, query_type="fts")
+        .select(["chunk"])
+        .limit(25)
+        .to_list()
+    ],
+    scores=[evaluate_braintrust],
+    trial_count=3,
+)
+```
+
+
+4. Use the `task` method as a way to run calls, this is great when your evaluation logic requires more than just the `input` parameter.
+
+
+```python
+def task_scoring_function(input, arg1, arg2, arg3):
+    return compute_something(input, arg1, arg2, arg3)
+
+
+
+def task(input):
+    return task_scoring_function(input, arg1, arg2, arg3)
+
+await Eval(
+    ...
+    task=task, # This is an easy way if we have a bunch of different parameterized tests that we'd like to 
+)
+```
+
+5. When running a set of Evals, make sure to save the resulting `Result` object that's returned to you. This is extremely useful when you want to see all of the results in a single place.
+
+```python
+result = Eval(
+    "MS Marco",  # Replace with your project name
+    data=lambda: [
+        {
+            "input": query,
+            "expected": label,
+            "metadata": {"search_type": "fts", "k": "25"},
+        }
+        for query, label in zip(queries, labels)
+    ],  # Replace with your eval dataset
+    task=lambda query: [
+        row["chunk"]
+        for row in table.search(query, query_type="fts")
+        .select(["chunk"])
+        .limit(25)
+        .to_list()
+    ],
+    scores=[evaluate_braintrust],
+    trial_count=3,
+)
+
+# This can be saved into an array for you to print out at the end of your script
+experiment_name = result.summary.experiment_name
+experiment_url = result.summary.experiment_url
+scores = result.summary.scores
+
+summarized_scores = [f"{result.summary.scores[score].score:.2f}" for score in scores]
+```
+
 I hope this helped significantly with getting started with Braintrust. If you have any questions, please feel free to reach out to me on twitter [@ivanleomk](https://twitter.com/ivanleomk). I struggled a fair bit when I was getting used to it so hopefully this helps!

@@ -46,32 +46,32 @@ export const GET: APIRoute = async function get({ params, request }) {
           content: `Here's the blog post content:
           ${content}
           
-          Please summarize the blog post.`,
+          `,
         },
       ],
     });
 
     const response = await openai.images.generate({
       model: "dall-e-3",
-      prompt: `Create a humorous and eye-catching Twitter OG image based on the following blog post:
-  
+      prompt: `Create an engaging and visually appealing Twitter OG image for this blog post:
+
       Title: "${title}"
       Description: "${description}"
-  
-      Here's a summary of the blog post:
-      ${summary.choices[0].message.content}
-  
-      Instructions:
-      1. Use vibrant, attention-grabbing colors that contrast well.
-      2. Incorporate playful, cartoon-style illustrations related to the blog topic.
-      3. Include a witty visual pun or joke based on the title or main theme.
-      4. Add small, quirky details that reward closer inspection.
-      5. Create a visually balanced layout with an element of surprise.
-      6. Include a funny mascot or character reacting to the blog's topic.
-      7. Use exaggerated proportions or perspectives for comedic effect.
-      8. Ensure the image is eye-catching and humorous without any text.
-  
-      The image should be instantly engaging, make people smile, and entice them to click through to read the full blog post.`,
+      Summary: ${summary.choices[0].message.content}
+
+      Guidelines:
+      - Design a square image with simple colors and shapes
+      - Draw inspiration from artificial intelligence concepts
+      - Use vibrant, contrasting colors to grab attention
+      - Incorporate playful, cartoon-style illustrations related to the blog topic
+      - Include a visual pun or clever reference to the main theme
+      - Add interesting details that reward closer inspection
+      - Create a balanced layout with an element of surprise
+      - Use visual storytelling to convey the blog's message
+      - Use symbols, icons and pictograms instead of words
+      - Aim for an image that's instantly engaging and makes people smile
+
+      The goal is to create an eye-catching image that entices viewers to read the full blog post.`,
       n: 1,
       size: "1024x1024",
     });

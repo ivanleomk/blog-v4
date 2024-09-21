@@ -62,7 +62,7 @@ const ogImageUrl = `/blog/${post.slug}/og-image.png`;
   />
 </head>
 <body class="">
-  <BlogPost {...post.data}>
+  <BlogPost {...post.data} readingTime={post.body.length / 600}>
     <Content components={{ Latex }} />
   </BlogPost>
 </body>
